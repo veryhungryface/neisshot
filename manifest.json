@@ -1,0 +1,26 @@
+{
+  "manifest_version": 3,
+  "name": "나이스샷 by.BAE",
+  "version": "1.0",
+  "permissions": ["sidePanel", "storage", "scripting", "activeTab"],
+  "host_permissions": ["https://*.neis.go.kr/*"],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "side_panel": {
+    "default_path": "sidepanel.html"
+  },
+  "icons": {
+    "16": "images/icon16.png",
+    "48": "images/icon48.png",
+    "128": "images/icon128.png"
+  },
+  "action": {
+    "default_title": "나이스샷 열기",
+    "default_icon": {
+      "16": "images/icon16.png",
+      "48": "images/icon48.png",
+      "128": "images/icon128.png"
+    }
+  }
+}

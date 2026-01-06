@@ -1,0 +1,819 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <style>
+    :root {
+      --bg: #ffffff;
+      --accent: #d97757;
+      --border: #e5e7eb;
+      --text-main: #111827;
+      --text-sub: #6b7280;
+      --row-odd: #f9fafb;
+      --primary: #3772FF;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, system-ui, sans-serif;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    /* === [상단 영역 - 비율로 고정] === */
+    .top-section {
+      flex: 0 0 auto;
+      max-height: 50vh;
+      min-height: 200px;
+      display: flex;
+      flex-direction: column;
+      border-bottom: 1px solid var(--border);
+      overflow: hidden;
+    }
+
+    /* 1. 헤더 수정됨 (로고 삭제, 설명 강조) */
+    .header-container {
+      padding: 20px 16px;
+      /* 여백을 조금 더 넉넉하게 */
+      background: white;
+      text-align: left;
+      flex-shrink: 0;
+      border-bottom: 1px solid #f3f4f6;
+      position: relative;
+    }
+
+    /* 설명 문구를 로고 스타일로 변경 */
+    .main-title {
+      font-size: 18px;
+      font-weight: 800;
+      color: var(--text-main);
+      margin: 0;
+      line-height: 1.4;
+      word-break: keep-all;
+    }
+
+    /* 2. 데이터 뷰 */
+    .data-view-container {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      background: white;
+    }
+
+    #dataInput {
+      width: 100%;
+      height: 50px;
+      border: none;
+      padding: 12px 16px;
+      box-sizing: border-box;
+      font-size: 13px;
+      border-bottom: 1px dashed var(--border);
+      outline: none;
+      resize: none;
+      background: #fffdfb;
+      flex-shrink: 0;
+    }
+
+    .table-info-bar {
+      padding: 6px 16px;
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--text-sub);
+      background: #f9fafb;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-shrink: 0;
+    }
+
+    .table-wrapper {
+      flex: 1;
+      overflow-y: auto;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+      table-layout: fixed;
+    }
+
+    th {
+      position: sticky;
+      top: 0;
+      background: white;
+      padding: 8px 12px;
+      text-align: left;
+      font-size: 11px;
+      color: var(--text-sub);
+      border-bottom: 1px solid var(--border);
+      z-index: 10;
+    }
+
+    td {
+      padding: 8px 12px;
+      border-bottom: 1px solid #f1f1f1;
+      word-break: break-all;
+      line-height: 1.4;
+      color: var(--text-main);
+      white-space: pre-wrap;
+    }
+
+    tr:nth-child(odd) td {
+      background-color: var(--row-odd);
+    }
+
+
+    /* === [하단 영역 - 남은 공간 차지, 스크롤 가능] === */
+    .control-container {
+      flex: 1 1 auto;
+      min-height: 0;
+      padding: 12px 12px 40px 12px;
+      background: white;
+      box-sizing: border-box;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      overflow-y: auto;
+    }
+
+    .control-title {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--text-sub);
+      text-transform: uppercase;
+      margin-bottom: 4px;
+    }
+
+    button {
+      width: 100%;
+      padding: 12px;
+      cursor: pointer;
+      border-radius: 6px;
+      border: 1px solid var(--border);
+      background: white;
+      font-size: 13px;
+      font-weight: 600;
+      transition: all 0.2s;
+      text-align: left;
+      padding-left: 14px;
+      display: flex;
+      align-items: center;
+    }
+
+    button:hover {
+      background: #f3f4f6;
+      border-color: #d1d5db;
+    }
+
+    button.primary {
+      background: var(--text-main);
+      color: white;
+      border: none;
+      justify-content: center;
+      padding-left: 0;
+    }
+
+    button.primary:hover {
+      background: #374151;
+    }
+
+    /* 옵션 박스 */
+    .option-box {
+      background: #f9fafb;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 8px 10px;
+      margin-bottom: 6px;
+    }
+
+    .option-box-title {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text-main);
+      margin-bottom: 6px;
+    }
+
+    .radio-group {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .radio-option {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      color: var(--text-main);
+      cursor: pointer;
+    }
+
+    .radio-option input[type="radio"] {
+      width: 14px;
+      height: 14px;
+      cursor: pointer;
+    }
+
+    .separator-input {
+      width: 50px;
+      padding: 3px 6px;
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      font-size: 11px;
+      margin-left: 4px;
+    }
+
+    /* 단계별 UI 스타일 */
+    .step-container {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    .step-badge {
+      flex-shrink: 0;
+      width: 24px;
+      height: 24px;
+      background: linear-gradient(135deg, #3772FF, #5a8eff);
+      color: white;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: 700;
+      box-shadow: 0 2px 6px rgba(55, 114, 255, 0.3);
+    }
+
+    .step-content {
+      flex: 1;
+    }
+
+    .step-title {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text-main);
+      margin-bottom: 2px;
+      line-height: 24px;
+    }
+
+    .step-desc {
+      font-size: 11px;
+      color: var(--text-sub);
+      line-height: 1.4;
+    }
+
+    .step-subtitle {
+      font-size: 11px;
+      font-weight: 600;
+      color: #dc2626;
+      line-height: 1.4;
+      margin-top: 2px;
+    }
+
+    .step-highlight {
+      background: linear-gradient(135deg, #fef3c7, #fde68a);
+      border: 1px solid #fcd34d;
+      border-radius: 8px;
+      padding: 12px 14px;
+      margin-bottom: 10px;
+    }
+
+    .step-highlight .step-badge {
+      background: linear-gradient(135deg, #f59e0b, #d97706);
+      box-shadow: 0 2px 6px rgba(245, 158, 11, 0.3);
+    }
+
+    .step-highlight .step-title {
+      color: #92400e;
+    }
+
+    .step-highlight-text {
+      font-size: 11px;
+      color: #b45309;
+      line-height: 1.5;
+      margin-top: 4px;
+    }
+
+    /* Tab 설명 */
+    .tab-info {
+      font-size: 10px;
+      color: var(--text-sub);
+      background: #f3f4f6;
+      padding: 6px 10px;
+      border-radius: 6px;
+      margin-bottom: 8px;
+      line-height: 1.4;
+    }
+
+    /* 버튼 섹션 */
+    .btn-section {
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 10px 12px;
+      margin-bottom: 6px;
+    }
+
+    .btn-section-title {
+      display: flex;
+      flex-direction: column;
+      gap: 1px;
+      margin-bottom: 8px;
+    }
+
+    .btn-section-title>span:first-child {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text-main);
+    }
+
+    .btn-section-desc {
+      font-size: 10px;
+      color: var(--text-sub);
+    }
+
+    .action-btn {
+      width: 100%;
+      padding: 10px 14px;
+      background: linear-gradient(135deg, #3772FF, #5a8eff);
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      gap: 2px;
+    }
+
+    .action-btn .btn-hint {
+      font-size: 10px;
+      font-weight: 400;
+      opacity: 0.85;
+    }
+
+    .action-btn:hover {
+      background: linear-gradient(135deg, #2860e0, #3772FF);
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(55, 114, 255, 0.3);
+    }
+
+    .custom-tab-row {
+      display: flex;
+      gap: 6px;
+    }
+
+    .tab-select {
+      width: 70px;
+      padding: 8px 10px;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 600;
+      background: white;
+      cursor: pointer;
+    }
+
+    ::-webkit-scrollbar {
+      width: 5px;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: #d1d5db;
+      border-radius: 10px;
+    }
+
+    /* 옵션 버튼 */
+    .options-btn {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: #6b7280;
+      color: white;
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.15);
+      transition: transform 0.2s, background 0.2s;
+      z-index: 10;
+    }
+
+    .options-btn:hover {
+      background: #374151;
+      transform: scale(1.1);
+    }
+
+    /* 옵션 사이드바 오버레이 */
+    .options-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.3);
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.3s, visibility 0.3s;
+      z-index: 200;
+    }
+
+    .options-overlay.open {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    /* 옵션 사이드바 */
+    .options-sidebar {
+      position: fixed;
+      top: 0;
+      right: -280px;
+      width: 280px;
+      height: 100%;
+      background: white;
+      box-shadow: -4px 0 20px rgba(0, 0, 0, 0.15);
+      transition: right 0.3s ease;
+      z-index: 300;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .options-sidebar.open {
+      right: 0;
+    }
+
+    .options-header {
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .options-header h3 {
+      margin: 0;
+      font-size: 15px;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .options-close {
+      background: none;
+      border: none;
+      font-size: 16px;
+      cursor: pointer;
+      color: var(--text-sub);
+      padding: 2px 6px;
+      line-height: 1;
+    }
+
+    .options-close:hover {
+      color: var(--text-main);
+    }
+
+    .options-content {
+      padding: 16px;
+      flex: 1;
+      overflow-y: auto;
+    }
+
+    /* 속도 선택 라디오 */
+    .speed-options {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .speed-option {
+      display: flex;
+      align-items: center;
+      padding: 12px 14px;
+      border: 2px solid var(--border);
+      border-radius: 10px;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .speed-option:hover {
+      border-color: #a1a1aa;
+    }
+
+    .speed-option.selected {
+      border-color: var(--primary);
+      background: linear-gradient(135deg, rgba(55, 114, 255, 0.08), rgba(55, 114, 255, 0.02));
+    }
+
+    .speed-option input[type="radio"] {
+      display: none;
+    }
+
+    .speed-dot {
+      width: 18px;
+      height: 18px;
+      border: 2px solid #d1d5db;
+      border-radius: 50%;
+      margin-right: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.15s;
+    }
+
+    .speed-option.selected .speed-dot {
+      border-color: var(--primary);
+      background: rgba(55, 114, 255, 0.1);
+    }
+
+    .speed-option.selected .speed-dot::after {
+      content: '';
+      width: 10px;
+      height: 10px;
+      background: linear-gradient(135deg, #3772FF, #5a8eff);
+      border-radius: 50%;
+      box-shadow: 0 2px 4px rgba(55, 114, 255, 0.4);
+    }
+
+    .speed-label {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text-main);
+    }
+
+    .speed-warning {
+      font-size: 10px;
+      color: #dc2626;
+      margin-left: 6px;
+    }
+
+    /* 텍스트 입력창 컨테이너 */
+    .textarea-container {
+      position: relative;
+    }
+
+    .textarea-container textarea {
+      padding-right: 36px;
+    }
+
+    .clear-btn {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: #e5e7eb;
+      color: #6b7280;
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      transition: all 0.15s;
+    }
+
+    .clear-btn:hover {
+      background: #ef4444;
+      color: white;
+    }
+
+    /* 브랜드 헤더 */
+    .brand-header {
+      background: linear-gradient(135deg, #3772FF, #5a8eff);
+      color: white;
+      text-align: center;
+      padding: 12px 16px;
+      font-size: 15px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+    }
+
+    .brand-header .highlight {
+      color: #fde047;
+    }
+
+    /* 고정 푸터 */
+    .fixed-footer {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: #f9fafb;
+      border-top: 1px solid var(--border);
+      padding: 8px 16px;
+      text-align: center;
+      font-size: 11px;
+      color: var(--text-sub);
+      z-index: 100;
+    }
+
+    .fixed-footer a {
+      color: var(--primary);
+      text-decoration: none;
+    }
+
+    .fixed-footer a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- 브랜드 헤더 -->
+  <div class="brand-header">
+    나이스 입력을 원샷에! <span class="highlight">나이스샷!</span>
+  </div>
+
+  <div class="top-section">
+    <div class="header-container">
+      <!-- Step 1 -->
+      <div class="step-container">
+        <div class="step-badge">1</div>
+        <div class="step-content">
+          <div class="step-title">데이터 붙여넣기</div>
+          <div class="step-desc">엑셀에서 복사한 여러 열 데이터를 아래 칸에 붙여넣으세요</div>
+        </div>
+      </div>
+      <!-- 옵션 버튼 -->
+      <button class="options-btn" id="optionsBtn" title="옵션">⚙️</button>
+    </div>
+
+    <div class="data-view-container">
+      <div class="textarea-container">
+        <textarea id="dataInput" placeholder="여기에 데이터를 붙여넣으세요..."></textarea>
+        <button class="clear-btn" id="clearBtn" title="데이터 지우기">✕</button>
+      </div>
+
+      <div class="table-info-bar">
+        <span>미리보기</span>
+        <span id="rowCount">0건</span>
+      </div>
+
+      <div class="table-wrapper">
+        <table id="dataTable">
+          <thead>
+            <tr>
+              <th style="width: 35px; text-align:center;">No.</th>
+              <th>내용</th>
+            </tr>
+          </thead>
+          <tbody id="tableBody">
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="control-container">
+    <!-- Step 2: 입력 옵션 설정 -->
+    <div class="step-container">
+      <div class="step-badge">2</div>
+      <div class="step-content">
+        <div class="step-title">입력 옵션 설정</div>
+        <div class="step-desc">기존 텍스트 처리 방식을 선택하세요</div>
+      </div>
+    </div>
+
+    <!-- 추가 모드 옵션 -->
+    <div class="option-box">
+      <div class="radio-group">
+        <label class="radio-option">
+          <input type="radio" name="appendType" value="none" checked>
+          <span>덮어쓰기 (기본)</span>
+        </label>
+        <label class="radio-option">
+          <input type="radio" name="appendType" value="newline">
+          <span>줄바꿈 후 추가</span>
+        </label>
+        <label class="radio-option">
+          <input type="radio" name="appendType" value="custom">
+          <span>특정 문구 후 추가</span>
+          <input type="text" id="customSeparator" class="separator-input" value=", " placeholder=", ">
+        </label>
+      </div>
+    </div>
+
+
+    <!-- Step 3: 일괄 입력 실행 -->
+    <div class="step-container">
+      <div class="step-badge">3</div>
+      <div class="step-content">
+        <div class="step-title">일괄 입력 실행 클릭</div>
+        <div class="step-subtitle">버튼클릭 전 입력할 첫칸 커서 깜박임 확인❗중요❗</div>
+        <div class="step-desc">아래 버튼을 눌러 일괄 입력을 시작하세요</div>
+      </div>
+    </div>
+
+    <!-- Tab 2회 (통합) -->
+    <div class="btn-section">
+      <div class="btn-section-title">
+        <span>행특, 과세특, 개세특, 독서활동</span>
+        <span class="btn-section-desc">Tab 2회</span>
+      </div>
+      <button id="btnTab2" class="action-btn">
+        <span>일괄 입력 실행</span>
+        <span class="btn-hint">커서 깜박임을 확인하고 클릭하세요</span>
+      </button>
+    </div>
+
+    <!-- Tab 설명 -->
+    <div class="tab-info">
+      💡 Tab = 첫번째 입력칸에서 다음 입력칸까지 이동하기 위해 누르는 Tab 키 횟수
+    </div>
+
+    <!-- Tab 직접 지정 -->
+    <div class="btn-section">
+      <div class="btn-section-title">
+        <span>⚙️ Tab수 직접 지정</span>
+        <span class="btn-section-desc">(예: 진로희망사항은 Tab을 4번 눌러야 아래칸으로 커서가 이동함.)</span>
+      </div>
+      <div class="custom-tab-row">
+        <select id="customTabCount" class="tab-select">
+          <option value="1">1회</option>
+          <option value="2">2회</option>
+          <option value="3">3회</option>
+          <option value="4">4회</option>
+          <option value="5">5회</option>
+          <option value="6">6회</option>
+          <option value="7">7회</option>
+          <option value="8">8회</option>
+        </select>
+        <button id="btnCustom" class="action-btn">
+          <span>일괄 입력 실행</span>
+          <span class="btn-hint">커서 깜박임을 확인하고 클릭하세요</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 옵션 오버레이 -->
+  <div class="options-overlay" id="optionsOverlay"></div>
+
+  <!-- 옵션 사이드바 -->
+  <div class="options-sidebar" id="optionsSidebar">
+    <div class="options-header">
+      <h3>⚡ 입력 속도</h3>
+      <button class="options-close" id="optionsClose">✕</button>
+    </div>
+    <div class="options-content">
+      <div class="speed-options">
+        <label class="speed-option" data-speed="fastest">
+          <input type="radio" name="speed" value="fastest">
+          <div class="speed-dot"></div>
+          <span class="speed-label">🚀 가장 빠르게!</span>
+          <span class="speed-warning">⚠️ 오류 가능</span>
+        </label>
+        <label class="speed-option" data-speed="fast">
+          <input type="radio" name="speed" value="fast">
+          <div class="speed-dot"></div>
+          <span class="speed-label">⚡ 빠르게!</span>
+        </label>
+        <label class="speed-option selected" data-speed="normal">
+          <input type="radio" name="speed" value="normal" checked>
+          <div class="speed-dot"></div>
+          <span class="speed-label">✨ 중간 (권장)</span>
+        </label>
+        <label class="speed-option" data-speed="slow">
+          <input type="radio" name="speed" value="slow">
+          <div class="speed-dot"></div>
+          <span class="speed-label">🐢 천천히</span>
+        </label>
+        <label class="speed-option" data-speed="slowest">
+          <input type="radio" name="speed" value="slowest">
+          <div class="speed-dot"></div>
+          <span class="speed-label">🐌 아주 천천히</span>
+        </label>
+      </div>
+      <p style="font-size: 11px; color: var(--text-sub); margin-top: 20px; line-height: 1.5;">
+        💡 입력이 안 되거나 값이 사라지면 더 느린 속도를 선택하세요.
+      </p>
+    </div>
+  </div>
+
+  <!-- 고정 푸터 -->
+  <div class="fixed-footer">
+    문의: <a href="mailto:sk8bty@gmail.com">sk8bty@gmail.com</a>
+  </div>
+
+  <script src="sidepanel.js"></script>
+</body>
+
+</html>
